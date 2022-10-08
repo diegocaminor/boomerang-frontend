@@ -13,6 +13,10 @@ contract Boomerang {
     address public owner;
     uint public expirationDate;
 
+    event NewVendor(address indexed vendor, uint256 cost);
+    event VendorPayment(address indexed vendor, uint256 payment);
+    event FundsBack(address indexed employee, uint256 amount);
+
     constructor(address employee_Address_, uint expirationDate_ ) payable {
         employee_Address = employee_Address_;
         balance = msg.value;
@@ -21,12 +25,13 @@ contract Boomerang {
     }
 
     function addBalance() payable public{
-        balance += msg.value;
+            balance += msg.value;
     }
 
     function addVendor(address account_new_vendor, uint256 cost_new_service) public{
-        require(msg.sender == owner);
+            require(msg.sender == owner);
         vendorsCosts[account_new_vendor] = cost_new_service;
+        emit NewVendor(account_new_vendor, cost_new_service);
     }
 
     function removeVendor(address account_vendor) public{
@@ -34,11 +39,12 @@ contract Boomerang {
         vendorsCosts[account_vendor] = 0;
     }
 
-    function payVendor(address vendor_address) public {
+        function payVendor(address vendor_address) public {
         require(msg.sender == employee_Address);
         require(balance > vendorsCosts[vendor_address]);
         balance -= vendorsCosts[vendor_address];
         payable(vendor_address).transfer(vendorsCosts[vendor_address]);
+        emit VendorPayment(vendor_address, vendorsCosts[vendor_address]);
     }
 
     function changeExpirationDate(uint new_date) public {
@@ -52,5 +58,6 @@ contract Boomerang {
         uint256 balance_temp = balance;
         balance = 0;
         payable(owner).transfer(balance_temp);
+        emit FundsBack( employee_Address, balance_temp);
     }
 }
