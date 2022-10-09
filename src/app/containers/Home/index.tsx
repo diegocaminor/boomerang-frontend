@@ -7,9 +7,10 @@ import Section from "../../components/Section";
 import React from "react";
 import Caption from "../../components/Caption";
 import Button from "../../components/Button";
+const Web3 = require('web3')
 
 const clientId =
-  "YBAjF1ZzEDwGcJSn5QZ4qqSVL2e5KrynvstWUYFLA3eQ7lcydgU4GDqgZ2aqT2LagW4KMTvxgaVV19C6Xj52DDZc"; // get from https://dashboard.web3auth.io
+  "BDQ9kpo2WshC1obaCr7SKdnPHR5kQ7h6hB68qX4nUstlfwkjoV_lIaCVXyw5fQG7Qli08M8EFiOc8jxAsEijr68"; // get from https://dashboard.web3auth.io
 
 function Home() {
   const [web3auth, setWeb3auth] = useState<Web3Auth | null>(null);
@@ -41,9 +42,15 @@ function Home() {
         const web3auth = new Web3Auth({
           clientId,
           chainConfig: {
-            chainNamespace: CHAIN_NAMESPACES.EIP155,
-            chainId: "0x1",
-            rpcTarget: "https://rpc.ankr.com/eth", // This is the public RPC we have added, please pass on your own endpoint while creating an app
+            chainNamespace: "eip155",
+            chainId: "0x13881", // hex of 80001, polygon testnet
+            rpcTarget: "https://polygon-mumbai.gateway.pokt.network/v1/lb/106922f1306d4c98dbed1449",
+            // Avoid using public rpcTarget in production.
+            // Use services like Infura, Quicknode etc
+            displayName: "Polygon Testnet",
+            blockExplorer: "https://mumbai.polygonscan.com/",
+            ticker: "MATIC",
+            tickerName: "Matic",
           },
         });
 
@@ -158,6 +165,65 @@ function Home() {
     const privateKey = await rpc.getPrivateKey();
     console.log(privateKey);
   };
+
+  const testContract = async () => {
+    if (!provider) {
+      console.log("provider not initialized yet test contract");
+      return;
+    }
+
+    console.log("testing")
+
+    let web3 = new Web3(provider);
+    console.log("testing2")
+    const fromAddress = (await web3.eth.getAccounts())[0];
+
+    console.log("Address")
+    console.log(fromAddress)
+
+    const contractABI = '[{"inputs":[{"internalType":"address","name":"employee_Address_","type":"address"},{"internalType":"bool","name":"expire_","type":"bool"},{"internalType":"contract ISuperfluid","name":"host","type":"address"}],"stateMutability":"payable","type":"constructor"},{"inputs":[],"name":"Unauthorized","type":"error"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"employee","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"FundsBack","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"vendor","type":"address"},{"indexed":false,"internalType":"uint256","name":"cost","type":"uint256"}],"name":"NewVendor","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"vendor","type":"address"},{"indexed":false,"internalType":"uint256","name":"payment","type":"uint256"}],"name":"VendorPayment","type":"event"},{"inputs":[],"name":"addBalance","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"address","name":"account_new_vendor","type":"address"},{"internalType":"uint256","name":"cost_new_service","type":"uint256"}],"name":"addVendor","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"balance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"cfaV1","outputs":[{"internalType":"contract ISuperfluid","name":"host","type":"address"},{"internalType":"contract IConstantFlowAgreementV1","name":"cfa","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"new_date","type":"uint256"}],"name":"changeExpirationDate","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bool","name":"value_","type":"bool"}],"name":"changeExpirationFeature","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract ISuperfluidToken","name":"token","type":"address"},{"internalType":"address","name":"receiver","type":"address"},{"internalType":"int96","name":"flowRate","type":"int96"}],"name":"createFlowFromContract","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"employee_Address","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"expirationDate","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"expires","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"vendor_address","type":"address"}],"name":"payVendor","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account_vendor","type":"address"}],"name":"removeVendor","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"returnFunds","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"unixTime","type":"uint256"}],"name":"setExpirationDate","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"vendorsCosts","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}]'
+    const contractAddress = "0x1e0B83Bd05555b3E9E9546fa73e59326Ecdb60aC";
+    const contract = new web3.eth.Contract(JSON.parse(contractABI), contractAddress);
+
+    console.log(contract)
+
+
+// Read message from smart contract
+    /*let a = await contract.methods.createFlowFromContract('0x5D8B4C2554aeB7e86F387B4d6c00Ac33499Ed01f','0xC3F836EC06A2202af23e59997A613CA0722F35d1',2).send({
+      from: fromAddress,
+      maxPriorityFeePerGas: "5000000000", // Max priority fee per gas
+      maxFeePerGas: "6000000000000", // Max fee per gas
+    });*/
+
+    let a = await contract.methods.createFlowFromContract('0x5D8B4C2554aeB7e86F387B4d6c00Ac33499Ed01f','0xC3F836EC06A2202af23e59997A613CA0722F35d1',2).send(
+        { from: fromAddress}
+    )
+
+    /*await contract.methods.addBalance().send(
+        {
+          from:"0x8eD00A727EA01a09A48CEcD779DCd3a07130A13a"
+        }
+    ).then((res: any) =>
+        console.log('Success', res))
+        .catch((err: any) => console.log(err))*/
+
+
+    /*console.log(l)
+    console.log(e)*/
+        /*.send({
+      from: account,
+    }).on("transactionHash", (txHash: any) => {
+      console.log("hash")
+      console.log(txHash)
+    }).on("receipt", () => {
+          console.log("recepiegt")
+        }).on("error", (error: any) => {
+          console.log("error")
+        console.log(error)
+        });;*/
+
+    console.log("message")
+  }
 
   const loggedInView = (
     <>
@@ -481,6 +547,7 @@ function Home() {
                   <button
                     className="bg-purple text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline "
                     type="button"
+                    onClick={testContract}
                   >
                     Create disposable card
                   </button>

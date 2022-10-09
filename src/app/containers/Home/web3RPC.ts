@@ -61,15 +61,18 @@ export default class EthereumRpc {
 
       const destination = fromAddress;
 
+      console.log("Address")
+      console.log(fromAddress)
+
       const amount = web3.utils.toWei("0.001"); // Convert 1 ether to wei
 
       // Submit transaction to the blockchain and wait for it to be mined
       const receipt = await web3.eth.sendTransaction({
         from: fromAddress,
-        to: destination,
+       /* to: destination,
         value: amount,
         maxPriorityFeePerGas: "5000000000", // Max priority fee per gas
-        maxFeePerGas: "6000000000000", // Max fee per gas
+        maxFeePerGas: "6000000000000", // Max fee per gas*/
       });
 
       return receipt;
