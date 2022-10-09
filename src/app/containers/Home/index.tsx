@@ -7,11 +7,9 @@ import Section from "../../components/Section";
 import React from "react";
 import Caption from "../../components/Caption";
 import Button from "../../components/Button";
-
-const Web3 = require('web3')
-
 import boomerangLogo from "../../assets/boomerangLogo.svg";
 
+const Web3 = require("web3");
 
 const clientId =
   "BDQ9kpo2WshC1obaCr7SKdnPHR5kQ7h6hB68qX4nUstlfwkjoV_lIaCVXyw5fQG7Qli08M8EFiOc8jxAsEijr68"; // get from https://dashboard.web3auth.io
@@ -27,6 +25,12 @@ function Home() {
     walletName: "",
     employeeAdress: "",
     expireDate: new Date(),
+    step: 1,
+    baseBudget: 0,
+    extraBudget: 0,
+    vendorName: "",
+    priceVendor: 0,
+    contractAddressVendor: "",
   });
 
   function handleInputChange(event: any) {
@@ -48,7 +52,8 @@ function Home() {
           chainConfig: {
             chainNamespace: "eip155",
             chainId: "0x13881", // hex of 80001, polygon testnet
-            rpcTarget: "https://polygon-mumbai.gateway.pokt.network/v1/lb/106922f1306d4c98dbed1449",
+            rpcTarget:
+              "https://polygon-mumbai.gateway.pokt.network/v1/lb/106922f1306d4c98dbed1449",
             // Avoid using public rpcTarget in production.
             // Use services like Infura, Quicknode etc
             displayName: "Polygon Testnet",
@@ -170,38 +175,49 @@ function Home() {
     console.log(privateKey);
   };
 
-  const testContract = async () => {
+  const setupWallet = async () => {
     if (!provider) {
       console.log("provider not initialized yet test contract");
       return;
     }
 
-    console.log("testing")
+    console.log("testing");
 
     let web3 = new Web3(provider);
-    console.log("testing2")
+    console.log("testing2");
     const fromAddress = (await web3.eth.getAccounts())[0];
 
-    console.log("Address")
-    console.log(fromAddress)
+    console.log("Address");
+    console.log(fromAddress);
 
-    const contractABI = '[{"inputs":[{"internalType":"address","name":"employee_Address_","type":"address"},{"internalType":"bool","name":"expire_","type":"bool"},{"internalType":"contract ISuperfluid","name":"host","type":"address"}],"stateMutability":"payable","type":"constructor"},{"inputs":[],"name":"Unauthorized","type":"error"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"employee","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"FundsBack","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"vendor","type":"address"},{"indexed":false,"internalType":"uint256","name":"cost","type":"uint256"}],"name":"NewVendor","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"vendor","type":"address"},{"indexed":false,"internalType":"uint256","name":"payment","type":"uint256"}],"name":"VendorPayment","type":"event"},{"inputs":[],"name":"addBalance","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"address","name":"account_new_vendor","type":"address"},{"internalType":"uint256","name":"cost_new_service","type":"uint256"}],"name":"addVendor","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"balance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"cfaV1","outputs":[{"internalType":"contract ISuperfluid","name":"host","type":"address"},{"internalType":"contract IConstantFlowAgreementV1","name":"cfa","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"new_date","type":"uint256"}],"name":"changeExpirationDate","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bool","name":"value_","type":"bool"}],"name":"changeExpirationFeature","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract ISuperfluidToken","name":"token","type":"address"},{"internalType":"address","name":"receiver","type":"address"},{"internalType":"int96","name":"flowRate","type":"int96"}],"name":"createFlowFromContract","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"employee_Address","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"expirationDate","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"expires","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"vendor_address","type":"address"}],"name":"payVendor","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account_vendor","type":"address"}],"name":"removeVendor","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"returnFunds","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"unixTime","type":"uint256"}],"name":"setExpirationDate","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"vendorsCosts","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}]'
+    const contractABI =
+      '[{"inputs":[{"internalType":"address","name":"employee_Address_","type":"address"},{"internalType":"bool","name":"expire_","type":"bool"},{"internalType":"contract ISuperfluid","name":"host","type":"address"}],"stateMutability":"payable","type":"constructor"},{"inputs":[],"name":"Unauthorized","type":"error"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"employee","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"FundsBack","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"vendor","type":"address"},{"indexed":false,"internalType":"uint256","name":"cost","type":"uint256"}],"name":"NewVendor","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"vendor","type":"address"},{"indexed":false,"internalType":"uint256","name":"payment","type":"uint256"}],"name":"VendorPayment","type":"event"},{"inputs":[],"name":"addBalance","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"address","name":"account_new_vendor","type":"address"},{"internalType":"uint256","name":"cost_new_service","type":"uint256"}],"name":"addVendor","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"balance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"cfaV1","outputs":[{"internalType":"contract ISuperfluid","name":"host","type":"address"},{"internalType":"contract IConstantFlowAgreementV1","name":"cfa","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"new_date","type":"uint256"}],"name":"changeExpirationDate","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bool","name":"value_","type":"bool"}],"name":"changeExpirationFeature","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract ISuperfluidToken","name":"token","type":"address"},{"internalType":"address","name":"receiver","type":"address"},{"internalType":"int96","name":"flowRate","type":"int96"}],"name":"createFlowFromContract","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"employee_Address","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"expirationDate","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"expires","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"vendor_address","type":"address"}],"name":"payVendor","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account_vendor","type":"address"}],"name":"removeVendor","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"returnFunds","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"unixTime","type":"uint256"}],"name":"setExpirationDate","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"vendorsCosts","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}]';
     const contractAddress = "0x1e0B83Bd05555b3E9E9546fa73e59326Ecdb60aC";
-    const contract = new web3.eth.Contract(JSON.parse(contractABI), contractAddress);
+    const contract = new web3.eth.Contract(
+      JSON.parse(contractABI),
+      contractAddress
+    );
 
-    console.log(contract)
+    console.log(contract);
 
-
-// Read message from smart contract
+    // Read message from smart contract
     /*let a = await contract.methods.createFlowFromContract('0x5D8B4C2554aeB7e86F387B4d6c00Ac33499Ed01f','0xC3F836EC06A2202af23e59997A613CA0722F35d1',2).send({
       from: fromAddress,
       maxPriorityFeePerGas: "5000000000", // Max priority fee per gas
       maxFeePerGas: "6000000000000", // Max fee per gas
     });*/
+    setState({
+      ...state,
+      step: 2,
+    });
 
-    let a = await contract.methods.createFlowFromContract('0x5D8B4C2554aeB7e86F387B4d6c00Ac33499Ed01f','0xC3F836EC06A2202af23e59997A613CA0722F35d1',2).send(
-        { from: fromAddress}
-    )
+    let a = await contract.methods
+      .createFlowFromContract(
+        "0x5D8B4C2554aeB7e86F387B4d6c00Ac33499Ed01f",
+        "0xC3F836EC06A2202af23e59997A613CA0722F35d1",
+        2
+      )
+      .send({ from: fromAddress });
 
     /*await contract.methods.addBalance().send(
         {
@@ -211,10 +227,9 @@ function Home() {
         console.log('Success', res))
         .catch((err: any) => console.log(err))*/
 
-
     /*console.log(l)
     console.log(e)*/
-        /*.send({
+    /*.send({
       from: account,
     }).on("transactionHash", (txHash: any) => {
       console.log("hash")
@@ -226,8 +241,26 @@ function Home() {
         console.log(error)
         });;*/
 
-    console.log("message")
-  }
+    console.log("message");
+  };
+
+  const addFunds = async () => {
+    console.log("STATE! STEP 3: ");
+    console.log(state);
+    setState({
+      ...state,
+      step: 3,
+    });
+  };
+
+  const useOfFunds = async () => {
+    console.log("STATE! STEP 3: ");
+    console.log(state);
+    setState({
+      ...state,
+      step: 3,
+    });
+  };
 
   const loggedInView = (
     <>
@@ -267,6 +300,169 @@ function Home() {
       Login
     </button>
   );
+
+  const renderFirstStep = (
+    <>
+      <Caption
+        text="Creating a new wallet"
+        className="m-10 text-white flex-auto"
+      ></Caption>
+
+      <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2 text-left">
+            Add employee and date when the wallet will expire
+          </label>
+          <input
+            value={state.walletName}
+            name="walletName"
+            className="shadow appearance-none border rounded w-full my-3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="wallet-name"
+            type="text"
+            placeholder="wallet name"
+            onChange={handleInputChange}
+          />
+          <input
+            value={state.employeeAdress}
+            name="employeeAdress"
+            className="shadow appearance-none border rounded w-full my-3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="wallet-name"
+            type="text"
+            placeholder="employee address"
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className="flex items-center justify-between">
+          <button
+            className="bg-purple text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline "
+            type="button"
+            onClick={setupWallet}
+          >
+            Create disposable card
+          </button>
+        </div>
+      </form>
+    </>
+  );
+
+  const renderSecondStep = (
+    <>
+      <Caption
+        text="Add budget for expenses"
+        className="m-10 text-white flex-auto"
+      ></Caption>
+
+      <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2 text-left">
+            Base budget for expenses
+          </label>
+          <input
+            value={state.baseBudget}
+            name="baseBudget"
+            className="shadow appearance-none border rounded w-full my-3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="base-budget"
+            type="number"
+            placeholder="Base budget for expenses"
+            onChange={handleInputChange}
+          />
+          <label className="block text-gray-700 text-sm font-bold mb-2 text-left">
+            Extra budget per time
+          </label>
+          <input
+            value={state.extraBudget}
+            name="extraBudget"
+            className="shadow appearance-none border rounded w-full my-3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="extra-budget"
+            type="number"
+            placeholder="employee address"
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className="flex items-center justify-between">
+          <button
+            className="bg-purple text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline "
+            type="button"
+            onClick={addFunds}
+          >
+            Add Balance
+          </button>
+        </div>
+      </form>
+    </>
+  );
+
+  const renderThirdStep = (
+    <>
+      <Caption
+        text="Add specific vendors for expenses"
+        className="m-10 text-white flex-auto"
+      ></Caption>
+
+      <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2 text-left">
+            Vendor
+          </label>
+          <input
+            value={state.vendorName}
+            name="vendorName"
+            className="shadow appearance-none border rounded w-full my-3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="vendor-name"
+            type="text"
+            placeholder="Base budget for expenses"
+            onChange={handleInputChange}
+          />
+          <label className="block text-gray-700 text-sm font-bold mb-2 text-left">
+            Price
+          </label>
+          <input
+            value={state.priceVendor}
+            name="priceVendor"
+            className="shadow appearance-none border rounded w-full my-3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="price-vendor"
+            type="number"
+            placeholder="employee address"
+            onChange={handleInputChange}
+          />
+          <label className="block text-gray-700 text-sm font-bold mb-2 text-left">
+            Contract address vendor
+          </label>
+          <input
+            value={state.contractAddressVendor}
+            name="contractAddressVendor"
+            className="shadow appearance-none border rounded w-full my-3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="contract-address-vendor"
+            type="text"
+            placeholder="employee address"
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className="flex items-center justify-between">
+          <button
+            className="bg-purple text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline "
+            type="button"
+            onClick={useOfFunds}
+          >
+            Enable vendors
+          </button>
+        </div>
+      </form>
+    </>
+  );
+
+  const renderSwitch = (step: number) => {
+    switch (step) {
+      case 1:
+        return renderFirstStep;
+      case 2:
+        return renderSecondStep;
+      case 3:
+        return renderThirdStep;
+      default:
+        return renderFirstStep;
+    }
+  };
 
   return (
     <React.Fragment>
@@ -503,51 +699,7 @@ function Home() {
             className="flex flex-col bg-purple-darker"
           >
             <React.Fragment>
-              <Caption
-                text="Creating a new wallet"
-                className="m-10 text-white flex-auto"
-              ></Caption>
-              <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-                <div className="mb-4">
-                  <label className="block text-gray-700 text-sm font-bold mb-2 text-left">
-                    Add employee and date when the wallet will expire
-                  </label>
-                  <input
-                    className="shadow appearance-none border rounded w-full my-3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="wallet-name"
-                    type="text"
-                    placeholder="wallet name"
-                    onChange={handleInputChange}
-                  />
-                  <input
-                    className="shadow appearance-none border rounded w-full my-3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="wallet-name"
-                    type="text"
-                    placeholder="employee address"
-                    onChange={handleInputChange}
-                  />
-                </div>
-                <div className="mb-6">
-                  <label className="block text-gray-700 text-sm font-bold mb-2 text-left">
-                    Select when the funds will return to your address
-                  </label>
-                  <input
-                    className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                    id="expiration-date"
-                    type="date"
-                    onChange={handleInputChange}
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <button
-                    className="bg-purple text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline "
-                    type="button"
-                    onClick={testContract}
-                  >
-                    Create disposable card
-                  </button>
-                </div>
-              </form>
+              <div className="col-3">{renderSwitch(state.step)}</div>
             </React.Fragment>
           </Section>
         </React.Fragment>
