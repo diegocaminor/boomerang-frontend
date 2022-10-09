@@ -18,16 +18,17 @@ contract Boomerang {
     uint256 public balance;
     address public owner;
     uint public expirationDate;
+    bool public expires;
 
     event NewVendor(address indexed vendor, uint256 cost);
     event VendorPayment(address indexed vendor, uint256 payment);
     event FundsBack(address indexed employee, uint256 amount);
 
-    constructor(address employee_Address_, uint expirationDate_, ISuperfluid host ) payable {
+    constructor(address employee_Address_, bool expire_, ISuperfluid host ) payable {
         employee_Address = employee_Address_;
         balance = msg.value;
         owner = payable(msg.sender);
-        expirationDate = expirationDate_;
+        expires = expire_;
         // Initialize CFA Library
         cfaV1 = CFAv1Library.InitData(
             host,
@@ -41,22 +42,31 @@ contract Boomerang {
         );
     }
 
-    function addBalance() payable public{
+    function changeExpirationFeature(bool value_) public isOwner{
+        expires = value_;
+    }
+
+
+    function setExpirationDate(uint unixTime) public {
+        require(expires , "This wallet is not expirable");
+        expirationDate = unixTime;
+    }
+
+
+    function addBalance() payable public isOwner{
             balance += msg.value;
     }
 
-    function addVendor(address account_new_vendor, uint256 cost_new_service) public{
-            require(msg.sender == owner);
+    function addVendor(address account_new_vendor, uint256 cost_new_service) public isOwner{
         vendorsCosts[account_new_vendor] = cost_new_service;
         emit NewVendor(account_new_vendor, cost_new_service);
     }
 
-    function removeVendor(address account_vendor) public{
-        require(msg.sender == owner);
+    function removeVendor(address account_vendor) public isExpire isOwner{
         vendorsCosts[account_vendor] = 0;
     }
 
-        function payVendor(address vendor_address) public {
+    function payVendor(address vendor_address) public isExpire{
         require(msg.sender == employee_Address);
         require(balance > vendorsCosts[vendor_address]);
         balance -= vendorsCosts[vendor_address];
@@ -64,18 +74,31 @@ contract Boomerang {
         emit VendorPayment(vendor_address, vendorsCosts[vendor_address]);
     }
 
-    function changeExpirationDate(uint new_date) public {
+    function changeExpirationDate(uint new_date) public isExpire {
         expirationDate = new_date;
     } 
 
-    function returnFunds() public {
-        require(block.timestamp >= expirationDate, "TimeConditions: too early");
+    function returnFunds() public isExpire isOwner {
         require(balance > 0);
-        require(msg.sender == owner);
+        if(expires){
+            require(block.timestamp >= expirationDate, "TimeConditions: too early");
+        }
         uint256 balance_temp = balance;
         balance = 0;
         payable(owner).transfer(balance_temp);
-        emit FundsBack( employee_Address, balance_temp);
+        emit FundsBack(employee_Address, balance_temp);
+    }
+
+    modifier isOwner() {
+        require(msg.sender == owner, "Caller is not owner");
+        _;
+    }
+
+    modifier isExpire() {
+        if(expires){
+            require(expirationDate > 0, "Set expiration Date before continue");
+        }
+        _;
     }
 
     function createFlowFromContract(
