@@ -7,7 +7,11 @@ import Section from "../../components/Section";
 import React from "react";
 import Caption from "../../components/Caption";
 import Button from "../../components/Button";
+
 const Web3 = require('web3')
+
+import boomerangLogo from "../../assets/boomerangLogo.svg";
+
 
 const clientId =
   "BDQ9kpo2WshC1obaCr7SKdnPHR5kQ7h6hB68qX4nUstlfwkjoV_lIaCVXyw5fQG7Qli08M8EFiOc8jxAsEijr68"; // get from https://dashboard.web3auth.io
@@ -326,16 +330,7 @@ function Home() {
             </div>
             <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
               <div className="flex flex-shrink-0 items-center">
-                <img
-                  className="block h-8 w-auto lg:hidden"
-                  src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                  alt="Your Company"
-                />
-                <img
-                  className="hidden h-8 w-auto lg:block"
-                  src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                  alt="Your Company"
-                />
+                <img src={boomerangLogo} className="" alt="logo" />
               </div>
               <div className="hidden sm:ml-6 sm:block">
                 <div className="flex space-x-4">
