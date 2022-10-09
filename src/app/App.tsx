@@ -3,6 +3,7 @@ import Home from "./containers/Home";
 import LandingPage from "./containers/LandingPage";
 import { Route, Routes } from "react-router-dom";
 import PageNotFound from "./containers/PageNotFound";
+import Web3 from "web3";
 
 function App() {
   return (

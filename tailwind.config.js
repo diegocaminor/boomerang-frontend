@@ -22,10 +22,10 @@ module.exports = {
         300: "#67e8f9",
         400: "#22d3ee",
         500: "#06b6d4",
-        600: "#0891b2",
-        700: "#0e7490",
-        800: "#155e75",
-        900: "#164e63",
+        600: "#3EA0FE",
+        700: "#3E3C68",
+        800: "#262450",
+        900: "#19173D",
       },
       "gray-lighter": "#D2D3D3",
       red: "#C50D02",
@@ -34,6 +34,11 @@ module.exports = {
     fontFamily: {
       sans: ["Graphik", "sans-serif"],
       serif: ["Merriweather", "serif"],
+    },
+    variants: {
+      extend: {
+        display: ["group-hover"],
+      },
     },
   },
   plugins: [],
