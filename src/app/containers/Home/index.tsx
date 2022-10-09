@@ -206,10 +206,6 @@ function Home() {
       maxPriorityFeePerGas: "5000000000", // Max priority fee per gas
       maxFeePerGas: "6000000000000", // Max fee per gas
     });*/
-    setState({
-      ...state,
-      step: 2,
-    });
 
     let a = await contract.methods
       .createFlowFromContract(
@@ -225,19 +221,11 @@ function Home() {
   const addFunds = async () => {
     console.log("STATE! STEP 3: ");
     console.log(state);
-    setState({
-      ...state,
-      step: 3,
-    });
   };
 
   const useOfFunds = async () => {
     console.log("STATE! STEP 3: ");
     console.log(state);
-    setState({
-      ...state,
-      step: 3,
-    });
   };
 
   const loggedInView = (
@@ -442,6 +430,26 @@ function Home() {
     }
   };
 
+  const goToStep1 = () => {
+    setState({
+      ...state,
+      step: 1,
+    });
+  };
+
+  const goToStep2 = () => {
+    setState({
+      ...state,
+      step: 2,
+    });
+  };
+
+  const goToStep3 = () => {
+    setState({
+      ...state,
+      step: 3,
+    });
+  };
   return (
     <React.Fragment>
       <nav className="bg-gray-800">
@@ -657,18 +665,26 @@ function Home() {
             className="flex "
           >
             <React.Fragment>
-              <Caption
-                text="1 Setup Wallet >"
-                className="m-10 text-white flex-auto"
-              ></Caption>
-              <Caption
-                text="2 Add funds >"
-                className="m-10 text-white flex-auto"
-              ></Caption>
-              <Caption
-                text="3 Use of funds"
-                className="m-10 text-white flex-auto"
-              ></Caption>
+              <button
+                className={`text-lg font-bold m-10 text-white flex-auto cursor-pointer`}
+                onClick={goToStep1}
+              >
+                1 Setup Wallet
+              </button>
+
+              <h2
+                className={`text-lg font-bold m-10 text-white flex-auto cursor-pointer`}
+                onClick={goToStep2}
+              >
+                2 Add funds
+              </h2>
+
+              <h2
+                className={`text-lg font-bold m-10 text-white flex-auto cursor-pointer`}
+                onClick={goToStep3}
+              >
+                3 Use of funds
+              </h2>
             </React.Fragment>
           </Section>
 
