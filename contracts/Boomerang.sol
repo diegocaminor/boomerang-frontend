@@ -8,6 +8,8 @@ import {ISuperfluidToken} from "@superfluid-finance/ethereum-contracts/contracts
 import {IConstantFlowAgreementV1} from "@superfluid-finance/ethereum-contracts/contracts/interfaces/agreements/IConstantFlowAgreementV1.sol";
 import {CFAv1Library} from "@superfluid-finance/ethereum-contracts/contracts/apps/CFAv1Library.sol";
 
+error Unauthorized();
+
 /** 
  * @title Boomerang
  * @dev Implements Expense Manager Card of an Employee
@@ -19,6 +21,10 @@ contract Boomerang {
     address public owner;
     uint public expirationDate;
     bool public expires;
+
+    /// @notice CFA Library.
+    using CFAv1Library for CFAv1Library.InitData;
+    CFAv1Library.InitData public cfaV1;
 
     event NewVendor(address indexed vendor, uint256 cost);
     event VendorPayment(address indexed vendor, uint256 payment);
