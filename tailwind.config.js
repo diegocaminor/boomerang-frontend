@@ -11,10 +11,11 @@ module.exports = {
     colors: {
       blue: "blue",
       black: "#000",
-      gray: "#19173d",
       white: "#fff",
       green: "#61F2E2",
       purple: "#8B7FD8",
+      "purple-dark": "#8B7Fff",
+      "purple-darker": "#373266",
       gray: {
         100: "#cffafe",
         200: "#a5f3fc",

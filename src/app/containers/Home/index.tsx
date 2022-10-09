@@ -3,11 +3,16 @@ import { Web3Auth } from "@web3auth/web3auth";
 import { CHAIN_NAMESPACES, SafeEventEmitterProvider } from "@web3auth/base";
 import RPC from "./web3RPC";
 import "../../../App.css";
+import Section from "../../components/Section";
+import React from "react";
+import Caption from "../../components/Caption";
 
 const clientId =
   "YBAjF1ZzEDwGcJSn5QZ4qqSVL2e5KrynvstWUYFLA3eQ7lcydgU4GDqgZ2aqT2LagW4KMTvxgaVV19C6Xj52DDZc"; // get from https://dashboard.web3auth.io
 
-function Home() {
+function Home(props: any) {
+  console.log("ESTAS SON LAS PROPS  EN HOME!!");
+  console.log(props);
   const [web3auth, setWeb3auth] = useState<Web3Auth | null>(null);
   const [provider, setProvider] = useState<SafeEventEmitterProvider | null>(
     null
@@ -164,26 +169,100 @@ function Home() {
   );
 
   return (
-    <div className="container">
-      <h1 className="title">
-        <a target="_blank" href="http://web3auth.io/" rel="noreferrer">
-          Web3Auth
-        </a>
-        & ReactJS Example
-      </h1>
-
-      <div className="grid">{provider ? loggedInView : unloggedInView}</div>
-
-      <footer className="footer">
-        <a
-          href="https://github.com/Web3Auth/Web3Auth/tree/master/examples/react-app"
-          target="_blank"
-          rel="noopener noreferrer"
+    <Section
+      containerClassName=" container flex flex-col bg-purple"
+      className=" "
+    >
+      <React.Fragment>
+        <Section
+          containerClassName="px-8 pt-10  mt-2 bg-purple"
+          className="flex "
         >
-          Source code
-        </a>
-      </footer>
-    </div>
+          <React.Fragment>
+            <Caption
+              text="1 Setup Wallet >"
+              className="m-10 text-white flex-auto"
+            ></Caption>
+            <Caption
+              text="2 Add funds >"
+              className="m-10 text-white flex-auto"
+            ></Caption>
+            <Caption
+              text="3 Use of funds"
+              className="m-10 text-white flex-auto"
+            ></Caption>
+          </React.Fragment>
+        </Section>
+
+        <Section
+          containerClassName="px-8 pt-10 pb-20 mt-2 bg-purple-dark"
+          className="flex flex-col bg-purple-darker"
+        >
+          <React.Fragment>
+            <Caption
+              text="Creating a new wallet"
+              className="m-10 text-white flex-auto"
+            ></Caption>
+            <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2 text-left">
+                  Add employee and date when the wallet will expire
+                </label>
+                <input
+                  className="shadow appearance-none border rounded w-full my-3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  id="wallet-name"
+                  type="text"
+                  placeholder="wallet name"
+                />
+                <input
+                  className="shadow appearance-none border rounded w-full my-3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  id="wallet-name"
+                  type="text"
+                  placeholder="employee address"
+                />
+              </div>
+              <div className="mb-6">
+                <label className="block text-gray-700 text-sm font-bold mb-2 text-left">
+                  Select when the funds will return to your address
+                </label>
+                <input
+                  className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                  id="expiration-date"
+                  type="date"
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <button
+                  className="bg-purple text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline "
+                  type="button"
+                >
+                  Create disposable card
+                </button>
+              </div>
+            </form>
+          </React.Fragment>
+        </Section>
+
+        {/* <h1 className="title">
+          <a target="_blank" href="http://web3auth.io/" rel="noreferrer">
+            Web3Auth
+          </a>
+          & ReactJS Example
+        </h1>
+
+        <div className="grid">{provider ? loggedInView : unloggedInView}</div>
+
+        <footer className="footer">
+          <a
+            href="https://github.com/Web3Auth/Web3Auth/tree/master/examples/react-app"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Source code
+          </a>
+        </footer> */}
+      </React.Fragment>
+    </Section>
   );
 }
 
