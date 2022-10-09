@@ -2,6 +2,12 @@
 
 pragma solidity >=0.7.0 <0.9.0;
 
+import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import {ISuperfluid, ISuperToken, ISuperApp} from "@superfluid-finance/ethereum-contracts/contracts/interfaces/superfluid/ISuperfluid.sol";
+import {ISuperfluidToken} from "@superfluid-finance/ethereum-contracts/contracts/interfaces/superfluid/ISuperfluidToken.sol";
+import {IConstantFlowAgreementV1} from "@superfluid-finance/ethereum-contracts/contracts/interfaces/agreements/IConstantFlowAgreementV1.sol";
+import {CFAv1Library} from "@superfluid-finance/ethereum-contracts/contracts/apps/CFAv1Library.sol";
+
 /** 
  * @title Boomerang
  * @dev Implements Expense Manager Card of an Employee
@@ -17,11 +23,22 @@ contract Boomerang {
     event VendorPayment(address indexed vendor, uint256 payment);
     event FundsBack(address indexed employee, uint256 amount);
 
-    constructor(address employee_Address_, uint expirationDate_ ) payable {
+    constructor(address employee_Address_, uint expirationDate_, ISuperfluid host ) payable {
         employee_Address = employee_Address_;
         balance = msg.value;
         owner = payable(msg.sender);
         expirationDate = expirationDate_;
+        // Initialize CFA Library
+        cfaV1 = CFAv1Library.InitData(
+            host,
+            IConstantFlowAgreementV1(
+                address(
+                    host.getAgreementClass(
+                        keccak256("org.superfluid-finance.agreements.ConstantFlowAgreement.v1")
+                    )
+                )
+            )
+        );
     }
 
     function addBalance() payable public{
@@ -59,5 +76,15 @@ contract Boomerang {
         balance = 0;
         payable(owner).transfer(balance_temp);
         emit FundsBack( employee_Address, balance_temp);
+    }
+
+    function createFlowFromContract(
+        ISuperfluidToken token,
+        address receiver,
+        int96 flowRate
+    ) external {
+        if (msg.sender != owner) revert Unauthorized();
+
+        cfaV1.createFlow(receiver, token, flowRate);
     }
 }
