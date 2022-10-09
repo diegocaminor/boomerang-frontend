@@ -175,7 +175,7 @@ function Home() {
     console.log(privateKey);
   };
 
-  const setupWallet = async () => {
+  const streamFlow = async () => {
     if (!provider) {
       console.log("provider not initialized yet test contract");
       return;
@@ -191,8 +191,8 @@ function Home() {
     console.log(fromAddress);
 
     const contractABI =
-      '[{"inputs":[{"internalType":"address","name":"employee_Address_","type":"address"},{"internalType":"bool","name":"expire_","type":"bool"},{"internalType":"contract ISuperfluid","name":"host","type":"address"}],"stateMutability":"payable","type":"constructor"},{"inputs":[],"name":"Unauthorized","type":"error"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"employee","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"FundsBack","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"vendor","type":"address"},{"indexed":false,"internalType":"uint256","name":"cost","type":"uint256"}],"name":"NewVendor","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"vendor","type":"address"},{"indexed":false,"internalType":"uint256","name":"payment","type":"uint256"}],"name":"VendorPayment","type":"event"},{"inputs":[],"name":"addBalance","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"address","name":"account_new_vendor","type":"address"},{"internalType":"uint256","name":"cost_new_service","type":"uint256"}],"name":"addVendor","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"balance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"cfaV1","outputs":[{"internalType":"contract ISuperfluid","name":"host","type":"address"},{"internalType":"contract IConstantFlowAgreementV1","name":"cfa","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"new_date","type":"uint256"}],"name":"changeExpirationDate","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bool","name":"value_","type":"bool"}],"name":"changeExpirationFeature","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract ISuperfluidToken","name":"token","type":"address"},{"internalType":"address","name":"receiver","type":"address"},{"internalType":"int96","name":"flowRate","type":"int96"}],"name":"createFlowFromContract","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"employee_Address","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"expirationDate","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"expires","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"vendor_address","type":"address"}],"name":"payVendor","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account_vendor","type":"address"}],"name":"removeVendor","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"returnFunds","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"unixTime","type":"uint256"}],"name":"setExpirationDate","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"vendorsCosts","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}]';
-    const contractAddress = "0x1e0B83Bd05555b3E9E9546fa73e59326Ecdb60aC";
+        '[{"inputs":[],"name":"addBalance","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"address","name":"account_new_vendor","type":"address"},{"internalType":"uint256","name":"cost_new_service","type":"uint256"}],"name":"addVendor","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"new_date","type":"uint256"}],"name":"changeExpirationDate","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bool","name":"value_","type":"bool"}],"name":"changeExpirationFeature","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract ISuperfluidToken","name":"token","type":"address"},{"internalType":"address","name":"receiver","type":"address"},{"internalType":"int96","name":"flowRate","type":"int96"}],"name":"createFlowFromContract","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract ISuperfluidToken","name":"token","type":"address"},{"internalType":"address","name":"receiver","type":"address"}],"name":"finishFromContract","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"employee_Address_","type":"address"},{"internalType":"bool","name":"expire_","type":"bool"},{"internalType":"contract ISuperfluid","name":"host","type":"address"}],"stateMutability":"payable","type":"constructor"},{"inputs":[],"name":"Unauthorized","type":"error"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"employee","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"FundsBack","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"vendor","type":"address"},{"indexed":false,"internalType":"uint256","name":"cost","type":"uint256"}],"name":"NewVendor","type":"event"},{"inputs":[{"internalType":"address","name":"vendor_address","type":"address"}],"name":"payVendor","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account_vendor","type":"address"}],"name":"removeVendor","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"returnFunds","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"unixTime","type":"uint256"}],"name":"setExpirationDate","outputs":[],"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"vendor","type":"address"},{"indexed":false,"internalType":"uint256","name":"payment","type":"uint256"}],"name":"VendorPayment","type":"event"},{"inputs":[],"name":"balance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"cfaV1","outputs":[{"internalType":"contract ISuperfluid","name":"host","type":"address"},{"internalType":"contract IConstantFlowAgreementV1","name":"cfa","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"employee_Address","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"expirationDate","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"expires","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"vendorsCosts","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}]'
+    const contractAddress = "0x172f6a0c56893b3068fBe83AA84E0c63Cc6044A2";
     const contract = new web3.eth.Contract(
       JSON.parse(contractABI),
       contractAddress
@@ -215,31 +215,9 @@ function Home() {
       .createFlowFromContract(
         "0x5D8B4C2554aeB7e86F387B4d6c00Ac33499Ed01f",
         "0xC3F836EC06A2202af23e59997A613CA0722F35d1",
-        2
+        10000
       )
       .send({ from: fromAddress });
-
-    /*await contract.methods.addBalance().send(
-        {
-          from:"0x8eD00A727EA01a09A48CEcD779DCd3a07130A13a"
-        }
-    ).then((res: any) =>
-        console.log('Success', res))
-        .catch((err: any) => console.log(err))*/
-
-    /*console.log(l)
-    console.log(e)*/
-    /*.send({
-      from: account,
-    }).on("transactionHash", (txHash: any) => {
-      console.log("hash")
-      console.log(txHash)
-    }).on("receipt", () => {
-          console.log("recepiegt")
-        }).on("error", (error: any) => {
-          console.log("error")
-        console.log(error)
-        });;*/
 
     console.log("message");
   };
@@ -336,7 +314,7 @@ function Home() {
           <button
             className="bg-purple text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline "
             type="button"
-            onClick={setupWallet}
+            onClick={streamFlow}
           >
             Create disposable card
           </button>
